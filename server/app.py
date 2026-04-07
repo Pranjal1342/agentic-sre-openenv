@@ -419,3 +419,15 @@ async def websocket_endpoint(websocket: WebSocket):
     except Exception as exc:
         logger.exception("WebSocket error: %s", exc)
         await websocket.close(code=1011, reason="internal_error")
+
+# ---------------------------------------------------------------------------
+# Multi-Mode Entry Point
+# ---------------------------------------------------------------------------
+def main():
+    """Entry point for the autograder and CLI execution."""
+    import uvicorn
+    # Booting on 7860 to remain compatible with Hugging Face Spaces
+    uvicorn.run("server.app:app", host="0.0.0.0", port=7860)
+
+if __name__ == "__main__":
+    main()

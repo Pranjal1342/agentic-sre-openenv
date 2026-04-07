@@ -5,11 +5,21 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "agentic-sre-openenv"
 version = "0.1.0"
-description = "Production-Grade OpenEnv RL Environment for Agentic SRE"
+description = "Production-Grade OpenEnv RL Environment"
 readme = "README.md"
 requires-python = ">=3.9"
+dependencies = [
+    "openenv-core>=0.2.0",
+    "fastapi",
+    "uvicorn",
+    "websockets",
+    "pyyaml",
+    "pydantic"
+]
 
-# Tells the build system to automatically find your folders (like server/, mock_infra/, etc.)
+[project.scripts]
+server = "server.app:main"
+
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["server*", "mock_infra*", "tasks*", "agents*", "graders*", "rag*"]
