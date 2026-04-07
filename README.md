@@ -35,7 +35,7 @@ This environment was meticulously designed for determinism, stable RL gradients,
 ## 📂 Project Structure
 
 ```text
-📦 agentic-re-openenv/
+📦 agentic-sre-openenv/
 ├── openenv.yaml                # Standardized OpenEnv metadata manifest
 ├── Dockerfile                  # Two-stage Docker build with built-in FAISS
 ├── inference.py                # Baseline evaluation script (Agent execution run)
