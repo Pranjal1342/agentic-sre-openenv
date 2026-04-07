@@ -5,7 +5,7 @@ tags:
   - "openenv"
 runtime: "docker"
 app: "server.app:app"
-port: 8000
+port: 7860
 
 # Hard step limits per task — enforced by step() which returns done=True
 # and reward=-1.0 when step_count >= max_steps[task_id].

@@ -58,12 +58,12 @@ RUN chown -R appuser:appuser /app
 
 USER appuser
 
-EXPOSE 8000
+EXPOSE 7860
 
 # Liveness probe — Docker and HF Spaces use this to determine if the
 # container is healthy before routing traffic to it.
 HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
+    CMD curl -f http://localhost:7860/health || exit 1
 
 # Uvicorn ASGI server — module path matches openenv.yaml `app` field.
-CMD ["uvicorn", "server.app:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
+CMD ["uvicorn", "server.app:app", "--host", "0.0.0.0", "--port", "7860", "--workers", "1"]

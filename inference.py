@@ -13,7 +13,7 @@ import websockets
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
 
-SERVER_WS_URL = os.getenv("SRE_ENV_WS", "ws://localhost:8000/ws")
+SERVER_WS_URL = os.getenv("SRE_ENV_WS", "ws://localhost:7860/ws")
 
 # Mandatory Hackathon Variables
 HF_TOKEN = os.getenv("HF_TOKEN", "")
