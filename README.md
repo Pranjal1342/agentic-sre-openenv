@@ -113,6 +113,7 @@ Demonstrating the post-training environment validity on `task_1` (using the incl
 └── knowledge_base/             # SRE runbooks ingested by the RAG system
 ```
 > 📖 For a deep dive into the RAG stack, Dual RNG, and FSM orchestration, check out our [System Architecture Documentation](docs/ARCHITECTURE.md).
+
 > 📖 For a deep dive into the RAG stack, Dual RNG, and FSM orchestration, check out our [WorkFlow](docs/WorkFlow.md).
 
 ---
