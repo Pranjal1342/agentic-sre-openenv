@@ -13,3 +13,6 @@ __pycache__/
 # Build artifacts and compiled binaries
 assets/
 faiss_index/
+docs/*.png
+docs/*.jpg
+docs/*.jpeg
