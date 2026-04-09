@@ -1,13 +1,12 @@
 ---
 title: Agentic SRE OpenEnv
-emoji: 🚀
 colorFrom: blue
 colorTo: green
 sdk: docker
 app_port: 7860
 ---
 
-# 🚀 Agentic SRE OpenEnv: Production-Grade RL Environment for Incident Remediation
+# Agentic SRE OpenEnv: Production-Grade RL Environment for Incident Remediation
 
 Welcome to the **Agentic SRE Environment**! This repository contains a fully containerized, stateful reinforcement learning environment built on the **[OpenEnv 0.1](https://github.com/huggingface/openenv)** specification. 
 
@@ -19,7 +18,7 @@ Historically, Reinforcement Learning researchers relied on simple game sandboxes
 
 ---
 
-## 🧠 Layout-Aware RAG Stack
+## Layout-Aware RAG Stack
 The environment simulates real SRE documentation retrieval using a highly optimized RAG pipeline:
 1. **Hierarchical Parsing:** Uses `unstructured` to parse SRE Runbook PDFs offline, retaining visual document hierarchies and tables rather than treating them as flat text chunks.
 2. **Dense Vector Embeddings:** Utilizes `sentence-transformers` for precise semantic embedding of runbook clauses to match alert signatures.
@@ -27,12 +26,12 @@ The environment simulates real SRE documentation retrieval using a highly optimi
 
 ---
 
-## 🔄 Continuous Correction (CI/CD/CM) Pipeline
+## Continuous Correction (CI/CD/CM) Pipeline
 The environment goes beyond stateless terminal commands by implementing a stateful `pipeline.py` tracker. It simulates a live Continuous Integration and Configuration Management lifecycle, forcing agents to respect deployment locks, rollback procedures, and stateful infrastructure changes during an active incident.
 
 ---
 
-## 🧮 Environment Design & Mathematics
+## Environment Design & Mathematics
 
 ### Reward Shaping Formula
 Returns precise, bounded rewards between `[-0.5, 1.5]` using a dense mathematical formulation:
@@ -53,7 +52,7 @@ $$H_t = w_1 A_t + w_2\left(\frac{1}{L_t}\right) - w_3 B_t$$
 
 ---
 
-## ⚙️ Action & Observation Space Definitions
+## Action & Observation Space Definitions
 
 | Action Type | Parameters | Example Schema |
 | :--- | :--- | :--- |
@@ -69,18 +68,18 @@ $$H_t = w_1 A_t + w_2\left(\frac{1}{L_t}\right) - w_3 B_t$$
 
 ---
 
-## 🚦 Task Scenarios
+## Task Scenarios
 
 | Task ID | Description | Difficulty | Expected Score |
 | :--- | :--- | :--- | :--- |
-| **`task_1`** | **Gateway Latency Triage:** A simple spike in upstream latency requiring log inspection and a localized restart. | Easy | `0.65` – `0.95` |
-| **`task_2`** | **OOMKilled Loop:** A memory leak causing progressive pod evictions. Requires scaling or rollback mitigation. | Medium | `0.40` – `0.75` |
-| **`task_3`** | **DB Pool Exhaustion:** A cascading failure locking the PostgreSQL schema. Highly penalizes incorrect restarts. | Hard | `0.15` – `0.50` |
-| **`task_4`** | **Telemetry Collapse:** A memory leak in `logging-fluentd-sidecar` evicts `prometheus-server`, causing all metric queries to fail. | Hard | `< 0.15` |
+| **`task_1`** | **Gateway Latency Triage:** A single upstream latency spike with a clear causal chain. Logs are readable, metrics are available, and a targeted restart resolves the issue. This establishes the baseline, it tests whether the agent can navigate the observation space, identify a localized fault signal, and execute a correct remediation without over engineering the solution. | Easy | `0.65` – `0.95` |
+| **`task_2`** | **OOMKilled Loop:** A memory leak causing progressive pod evictions. Restarting without scaling or rolling back the offending deployment re-triggers the same eviction cycle. The agent must recognize the repeating failure pattern, resist the instinct to apply the same fix twice, and choose between two valid but non-equivalent remediation paths (scale-out vs. rollback).| Medium | `0.40` – `0.75` |
+| **`task_3`** | **DB Pool Exhaustion:** A PostgreSQL schema lock caused by pool exhaustion looks superficially similar to task 1 but restarting the database here doesn't release the lock cleanly; it risks corrupting in flight transactions and cascades failures downstream. The heavy penalty weight (γ = 0.5) for destructive operations directly targets this failure mode. The agent must inspect connection pool state, identify the locking query, and drain connections gracefully before any restart. | Hard | `0.15` – `0.50` |
+| **`task_4`** | **Telemetry Collapse:** A memory leak in `logging-fluentd-sidecar` evicts `prometheus-server`. The observability stack itself is the failure.The agent must recover the logging pipeline before it can diagnose anything else. This tests meta-reasoning under zero-visibility; a scenario with no clean optimal path and accordingly low expected scores.. | Hard | `< 0.15` |
 
 ---
 
-## 📊 Baseline Evaluation Scores
+## Baseline Evaluation Scores
 Demonstrating the post-training environment validity on `task_1` (using the included baseline comparison script):
 
 * **Pretrained LLM (Vanilla Prompt):** `0.0841` *(Failed to resolve, exhausted step limits)*
@@ -89,10 +88,10 @@ Demonstrating the post-training environment validity on `task_1` (using the incl
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```text
-📦 agentic-sre-openenv/
+  agentic-sre-openenv/
 ├── openenv.yaml                # Standardized OpenEnv metadata manifest
 ├── Dockerfile                  # Two-stage Docker build with built-in FAISS
 ├── inference.py                # Baseline evaluation script
@@ -112,9 +111,7 @@ Demonstrating the post-training environment validity on `task_1` (using the incl
 ├── tasks/                      # Progressive incident scenarios
 └── knowledge_base/             # SRE runbooks ingested by the RAG system
 ```
-> 📖 For a deep dive into the RAG stack, Dual RNG, and FSM orchestration, check out our [System Architecture Documentation](docs/ARCHITECTURE.md).
-
-> 📖 For a deep dive into the RAG stack, Dual RNG, and FSM orchestration, check out our [WorkFlow](docs/WorkFlow.md).
+> For a deep dive into the RAG stack, Dual RNG, and FSM orchestration, check out our [System Architecture Documentation](docs/ARCHITECTURE.md) and [WorkFlow](docs/WorkFlow.md).
 
 ---
 
