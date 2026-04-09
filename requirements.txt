@@ -1,9 +1,3 @@
-# ============================================================
-# Agentic SRE OpenEnv Environment — Pinned Dependencies
-# Python 3.11 | OpenEnv 0.1
-# Place this file inside agentic_sre_env/ alongside the Dockerfile.
-# ============================================================
-
 # PyTorch CPU-only index (must be declared here at the top)
 --extra-index-url https://download.pytorch.org/whl/cpu
 

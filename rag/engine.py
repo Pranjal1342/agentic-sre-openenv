@@ -9,7 +9,7 @@ Architecture (online/offline separation):
            No external database, no internet required — satisfies the
            OpenEnv requirement for a clean `docker run` startup.
 
-Query timing guidance (per blueprint):
+Query timing guidance:
   - During initial TRIAGE: surface relevant runbooks on first alert
   - During INVESTIGATION: validate hypothesis against known failure patterns
   - Pre-REMEDIATION: confirm safe command syntax before execution

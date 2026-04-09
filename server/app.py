@@ -37,6 +37,7 @@ from server.models import RewardBreakdown
 import tasks.task_1 as task_1_mod
 import tasks.task_2 as task_2_mod
 import tasks.task_3 as task_3_mod
+import tasks.task_4 as task_4_mod
 from tasks.task_3 import StageTracker
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")

@@ -1,9 +1,3 @@
-"""
-server/models.py
-Pydantic v2 data models — the canonical type-safe contract between the RL
-agent and the SRE environment server.  (Replaces server/schemas.py)
-"""
-
 from pydantic import BaseModel, Field, ConfigDict
 from typing import Annotated, Literal, List, Dict, Union, Any
 
@@ -159,19 +153,6 @@ class ObservationModel(BaseModel):
 # ==========================================
 
 class RewardBreakdown(BaseModel):
-    """
-    Named decomposition of the reward signal.
-
-    Exact blueprint formula: R_t = α·ΔH_t + β·M_t + λ·E_t − γ·P_t − δ
-
-    Blueprint-specified weights (constrain reward to [−0.5, 1.5]):
-      α = 1.0  (health delta)
-      β = 0.2  (milestone bonus)
-      λ = 0.15 (action efficiency)
-      γ = 0.5  (behavioral penalty)
-      δ = 0.01 (time-step penalty)
-    """
-
     model_config = ConfigDict(
         json_schema_extra={
             "example": {

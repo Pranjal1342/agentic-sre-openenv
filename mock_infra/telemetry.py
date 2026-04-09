@@ -8,10 +8,10 @@ the composite Health Score.
 
 All values are derived from concrete infrastructure state — no hallucination.
 
-Health Score formula (blueprint-specified):
-  H_t = w1·A_t + w2·(1/L_t) − w3·B_t
+Health Score formula:
+  H_t = w1·A_t + w2·(1/L_t) + w3·(1 - E_t)
 
-Burn Rate formula (blueprint-specified):
+Burn Rate formula:
   B_t = E_t / (1 − SLO_target)
   where SLO_target = 0.999 (99.9% availability), error budget = 0.001
 """
@@ -42,12 +42,12 @@ class MockTelemetry:
     Prometheus-compatible metric aggregator for the SRE environment.
 
     Implements the blueprint Health Score:
-      H_t = w1·A_t + w2·(1/L_t) − w3·B_t
+      H_t = w1·A_t + w2·(1/L_t) + w3·(1 - E_t)
 
     Where:
       A_t  = Availability = 1 − error_rate
       1/L_t = Latency quality = threshold / latency_p99 (capped at 1.0)
-      B_t  = Burn Rate = error_rate / SLO_error_budget (normalised to [0, 1])
+      (1 - E_t) = Inverse Error Rate
     """
 
     def __init__(self, db: MockDatabase, mesh: MockServiceMesh) -> None:
@@ -134,14 +134,14 @@ class MockTelemetry:
         """
         Composite Health Score H_t ∈ [0, 1] — blueprint formula:
 
-          H_t = w1·A_t + w2·(1/L_t) − w3·B_t
+          H_t = w1·A_t + w2·(1/L_t) + w3·(1 - E_t)
 
         Components:
           A_t  = Availability = 1 − error_rate_fraction ∈ [0, 1]
           1/L_t = Latency quality = min(threshold / latency_p99, 1.0) ∈ [0, 1]
                   (threshold = 200ms; reads 1.0 when latency is at/below threshold,
                    decreases toward 0 as latency degrades)
-          B_t  = Burn Rate (normalised, 0 = no burn, 1 = extreme burn)
+          (1 - E_t) = Inverse Error Rate where E_t is the error_rate_fraction
 
         Weights: w1=0.50, w2=0.35, w3=0.15
         """
@@ -155,10 +155,10 @@ class MockTelemetry:
         inv_l_t = min(1.0 / latency_ratio, 1.0)  # cap at 1.0 (no bonus for sub-threshold)
         inv_l_t = max(0.0, inv_l_t)
 
-        # B_t — Normalised Burn Rate
-        b_t = self.compute_burn_rate(error_rate_pct=signals["error_rate_pct"])
+        # (1 - E_t) — Inverse Error Rate
+        e_t_inv = max(0.0, 1.0 - signals["error_rate_pct"] / 100.0)
 
-        h_t = W1 * a_t + W2 * inv_l_t - W3 * b_t
+        h_t = W1 * a_t + W2 * inv_l_t + W3 * e_t_inv
         return round(max(0.0, min(1.0, h_t)), 4)
 
     # ── Alerts ────────────────────────────────────────────────────────────────
